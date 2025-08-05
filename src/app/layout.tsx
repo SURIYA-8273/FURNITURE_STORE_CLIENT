@@ -33,12 +33,14 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body
+     
+       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
         <ToastContainer/>
       </body>
+     
     </html>
   );
 }

@@ -5,9 +5,9 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   console.log("ADMIN LAYOUT");
 
   return (
-    <div className="bg-[#f1efef] h-screen w-screen flex">
+    <div className="bg-[#eff0f152] h-screen w-screen flex">
       <Sidebar />
-      <main className="ml-54 p-2 text-black w-full">{children}</main>
+      <main className="md:ml-54 text-black w-full">{children}</main>
     </div>
   );
 };

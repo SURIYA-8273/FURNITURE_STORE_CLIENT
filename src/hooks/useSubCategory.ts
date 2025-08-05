@@ -1,43 +1,53 @@
 "use client";
-import { createBanner, deleteBanner, fetchAllBanners, updateBanner } from "@/api/services/admin/banner-services";
-
+import {
+  createCategory,
+  updateCategory,
+} from "@/api/services/admin/category-services";
+import {
+  createSubCategory,
+  deleteSubCategory,
+  fetchAllSubCategories,
+} from "@/api/services/admin/sub-category-services";
 import axios from "axios";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-interface Banner {
+interface SubCategory {
   id: number;
   name: string;
   image: string;
-  isMain: boolean;
+  active: boolean;
+  description: string;
+  optionsCount: number;
 }
 
-export const useBanner = () => {
-  const [banners, setBanners] = useState<Banner[]>([]);
-
+export const useSubCategory = () => {
+  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<{ [key: string]: string } | null>(null);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState<File | null | string>(null);
+  const [active, setActive] = useState(true);
   const [id, setId] = useState<number | string | null>(null);
   const [previewURL, setPreviewURL] = useState<null | string>(null);
   const [modalState, setModalState] = useState(false);
 
-  const [name, setName] = useState("");
-  const [image, setImage] = useState<File | null | string>(null);
-  const [isMain, setIsMain] = useState(true);
+  const [optionsCount, setOptionsCount] = useState<number>(0);
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
-  const handleFetchAllBanners = async () => {
+  const handleFetchAllSubCategories = async () => {
     setLoading(true);
     try {
-      const response = await fetchAllBanners();
+      const response = await fetchAllSubCategories();
       if (
         response?.status == 200 &&
         response?.data?.status &&
-        response?.data?.message == "Banners retrieved successfully"
+        response?.data?.message == "Sub categories retrieved successfully"
       ) {
         toast.success(response.data.message);
-        setBanners(response.data.data);
+        setSubCategories(response.data.data);
       } else {
         toast.error(response.data.message);
       }
@@ -48,10 +58,14 @@ export const useBanner = () => {
     }
   };
 
-  const handleCreateBanner = async () => {
+  const handleCreateSubCategory = async () => {
     const errorHandler: { [key: string]: string } = {};
     if (!name.trim()) errorHandler.name = "Enter valid name";
     if (!categoryId) errorHandler.categoryId = "Enter valid category id";
+    if (optionsCount <= 0)
+      errorHandler.optionsCount = "Enter options count above 1";
+    if (!description.trim())
+      errorHandler.description = "Enter valid description";
     if (!image) errorHandler.image = "Select image";
     console.log(errorHandler);
     if (Object.keys(errorHandler).length > 0) {
@@ -62,42 +76,36 @@ export const useBanner = () => {
       setLoading(true);
       const formData = new FormData();
       formData.append("name", name);
+      formData.append("description", description);
+      formData.append("optionsCount", String(optionsCount));
 
       formData.append("categoryId", String(categoryId));
-      formData.append("isMain", String(isMain));
+      formData.append("active", String(active));
       if (image) formData.append("image", image);
 
-      const response = await createBanner(formData);
+      const response = await createSubCategory(formData);
       console.log(response);
 
       if (
         (response?.status == 201 || response?.status == 200) &&
         response?.data?.status &&
-        response?.data?.message == "Banner created successfully"
+        response?.data?.message == "Sub category created successfully"
       ) {
         setModalState(true);
         resetStates();
         toast.success(response.data.message);
-        handleFetchAllBanners();
+        handleFetchAllSubCategories();
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // console.log(error);
-        // if (
-        //   error.response?.status == 409 &&
-        //   !error.response?.data?.status &&
-        //   error.response?.data?.message ==
-        //     "Category not found with this id"
-        // ) {
-        //   toast.error(error.response.data.message);
-        // }
+        console.log(error);
         if (
-          error.response?.status == 404 &&
+          error.response?.status == 409 &&
           !error.response?.data?.status &&
           error.response?.data?.message ==
-            "Category not found with this id"
+            "Sub category already exists for this category"
         ) {
           toast.error(error.response.data.message);
         }
@@ -111,10 +119,11 @@ export const useBanner = () => {
     }
   };
 
-  const handleUpdateBanner = async () => {
+  const handleUpdateSubCategory = async () => {
     const errorHandler: { [key: string]: string } = {};
     if (!name.trim()) errorHandler.name = "Enter valid name";
-    
+    if (!description.trim())
+      errorHandler.description = "Enter valid description";
     if (!image) errorHandler.image = "Select image";
     console.log(errorHandler);
     if (Object.keys(errorHandler).length > 0) {
@@ -127,24 +136,24 @@ export const useBanner = () => {
       const formData = new FormData();
 
       formData.append("name", name);
-     
-      formData.append("active", String(isMain));
+      formData.append("description", description);
+      formData.append("active", String(active));
       if (image) formData.append("image", image);
       if (!id) {
         return;
       }
 
-      const response = await updateBanner(formData, id);
+      const response = await updateCategory(formData, id);
 
       if (
         response?.status == 200 &&
         response?.data?.status &&
-        response?.data?.message == "Banner updated successfully"
+        response?.data?.message == "Category updated successfully"
       ) {
         setModalState(true);
         resetStates();
         toast.success(response.data.message);
-        handleFetchAllBanners();
+        handleFetchAllSubCategories();
       } else {
         toast.error(response.data.message);
       }
@@ -155,18 +164,18 @@ export const useBanner = () => {
         if (
           error.response?.status == 409 &&
           !error.response?.data?.status &&
-          error.response?.data?.message == "Banner name already exists"
+          error.response?.data?.message == "Category name already exists"
         ) {
           toast.error(error.response.data.message);
         }
-        // if (
-        //   error.response?.status == 404 &&
-        //   !error.response?.data?.status &&
-        //   error.response?.data?.message == "Category not found with this id"
-        // ) {
-        //   toast.error(error.response.data.message);
-        //   setModalState(true);
-        // }
+        if (
+          error.response?.status == 404 &&
+          !error.response?.data?.status &&
+          error.response?.data?.message == "Category not found with this id"
+        ) {
+          toast.error(error.response.data.message);
+          setModalState(true);
+        }
         if (error.status == 403) {
           redirect("/auth/admin/login");
         }
@@ -177,36 +186,36 @@ export const useBanner = () => {
     }
   };
 
-  const handleDeleteBanner = async () => {
+  const handleDeleteSubCategory = async () => {
     setLoading(true);
     try {
       if (!id) {
         return;
       }
 
-      const response = await deleteBanner(id);
+      const response = await deleteSubCategory(id);
 
       if (
         response?.status == 200 &&
         response?.data?.status &&
-        response?.data?.message == "Banner deleted successfully"
+        response?.data?.message == "Sub category deleted successfully"
       ) {
         setModalState(true);
         toast.success(response.data.message);
-        handleFetchAllBanners();
+        handleFetchAllSubCategories();
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // if (
-        //   error.response?.status == 404 &&
-        //   !error.response?.data?.status &&
-        //   error.response?.data?.message == "Category not found with this id"
-        // ) {
-        //   toast.error(error.response.data.message);
-        //   setModalState(true);
-        // }
+        if (
+          error.response?.status == 404 &&
+          !error.response?.data?.status &&
+          error.response?.data?.message == "Category not found with this id"
+        ) {
+          toast.error(error.response.data.message);
+          setModalState(true);
+        }
         if (error.status == 403) {
           redirect("/auth/admin/login");
         }
@@ -218,40 +227,42 @@ export const useBanner = () => {
   };
 
   const resetStates = () => {
-    
+    setDescription("");
     setImage(null);
     setName("");
     setPreviewURL(null);
     setCategoryId(null);
-    
+    setOptionsCount(0);
   };
 
   useEffect(() => {
-    handleFetchAllBanners();
+    handleFetchAllSubCategories();
   }, []);
 
   return {
     modalState,
     error,
     loading,
-    banners,
+    subCategories,
     name,
-   
-    isMain,
+    description,
+    active,
     image,
     setImage,
-    setIsMain,
+    setActive,
     setName,
     setError,
     setPreviewURL,
-    
+    setDescription,
     setModalState,
-    handleCreateBanner,
-    handleDeleteBanner,
-    handleUpdateBanner,
+    handleCreateSubCategory,
+    handleDeleteSubCategory,
+    handleUpdateSubCategory,
     id,
     setId,
     previewURL,
+    optionsCount,
+    setOptionsCount,
     categoryId,
     setCategoryId,
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { adminLogin } from "@/api/services/admin/auth";
+import { adminLogin } from "@/api/services/admin/auth-services";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -42,9 +42,10 @@ export const useLogin = () => {
 
         toast.error("Login failed ❌");
       }
-    } catch (error) {
-      toast.error("Login failed ❌");
-      console.log(`LOGIN ERROR : ${error}`);
+    } catch (err) {
+      console.log(err);
+      toast.error("Unable to connect to server.Try again later❌");
+      console.log(`LOGIN ERROR : ${err}`);
     } finally {
       setLoading(false);
     }

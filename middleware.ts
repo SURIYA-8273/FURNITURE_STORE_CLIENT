@@ -1,8 +1,9 @@
-// middleware.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("jwt")?.value;
+  console.log(token);
 
   if (!token && request.nextUrl.pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/auth/admin/login", request.url));

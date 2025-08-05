@@ -2,27 +2,83 @@ import { MdEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import { IoMdInformationCircle } from "react-icons/io";
 import Image from "next/image";
-import { useState } from "react";
-import Modal from "../modals/admin/Modal";
-import ProductEditModal from "../modals/admin/ProductEditModal";
-import ProductDeleteModal from "../modals/admin/ProductDeleteModal";
+import { useState, CSSProperties, useEffect } from "react";
+import Modal from "../modals/Modal";
 import ProductViewModal from "../modals/admin/ProductViewModal";
 import { CiImport } from "react-icons/ci";
 import { CiExport } from "react-icons/ci";
+import { ClipLoader } from "react-spinners";
+
+
+import { useCategory } from "@/hooks/useCategory";
+
+const override: CSSProperties = {
+  display: "block",
+  margin: "0 auto",
+};
+
+interface Category {
+  id: number;
+  name: string;
+  image: string;
+  active: boolean;
+  discription: string;
+}
+
 export default function ProductsTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
+
+  const {
+    loading,
+    categories,
+    modalState,
+    setModalState,
+    setName,
+    setDescription,
+    description,
+    setImage,
+    setActive,
+    active,
+    setId,
+    name,
+    setPreviewURL,
+    handleDeleteCategory,
+    handleUpdateCategory,
+    error,
+    previewURL,
+    handleCreateCategory,
+  } = useCategory();
+
+  useEffect(() => {
+    if (modalState) {
+      setIsModalOpen(false);
+      setActiveModal(null);
+      setModalState(false);
+    }
+  }, [modalState]);
 
   const handleProductView = () => {
     setActiveModal("view");
     setIsModalOpen(true);
   };
-  const handleProductDelete = () => {
+  const handleProductDelete = (id: string | number) => {
+    setId(id);
     setActiveModal("delete");
     setIsModalOpen(true);
   };
-  const handleProductEdit = () => {
+  const handleProductUpdate = (data: Category) => {
+    setId(data.id);
+    setName(data.name);
+    setDescription(data.discription);
+    // setPreviewURL(data.image);
+    setActive(data.active);
     setActiveModal("edit");
+    setIsModalOpen(true);
+  };
+
+  const handleProductAdd = () => {
+    setActiveModal("add");
     setIsModalOpen(true);
   };
 
@@ -31,8 +87,8 @@ export default function ProductsTable() {
   };
 
   return (
-    <div>
-      <div className="flex justify-between py-3 bg-white px-4">
+    <div className="w-full max-w-[1100px] max-h-[600px] overflow-x-auto scrollbar-hide bg-white">
+      <div className="flex justify-between py-3 w-full bg-white  px-4 sticky top-0 z-20">
         <div className="flex">
           <div className="flex border-1 rounded-sm text-[12px] border-gray-300 pt-1 px-2">
             <span>
@@ -47,7 +103,7 @@ export default function ProductsTable() {
             <span className="pl-1 pt-0.5">EXPORT</span>
           </div>
         </div>
-        <div>
+        <div className="flex">
           <span>
             <input
               type="text"
@@ -55,91 +111,142 @@ export default function ProductsTable() {
               className="border-1 py-1.5 rounded-sm border-gray-300 placeholder:text-[12px] font-semibold px-2 text-[12px] focus:border-gray-500"
             />
           </span>
-          <span className="text-[12px] px-3 py-2 cursor-pointer hover:bg-[#d289ff] bg-[#a53ee5] text-white rounded-sm ml-3 ">
-            ADD PRODUCT
-          </span>
+          <div
+            onClick={handleProductAdd}
+            className="text-[12px] px-3 pt-2  cursor-pointer hover:bg-[#ae74cf] bg-[#a53ee5] text-white rounded-sm ml-3 "
+          >
+            ADD CATEGOR
+          </div>
         </div>
       </div>
-      <table className="w-full bg-white rounded-sm shadow-xl">
-        <thead className="">
-          <tr className="bg-gray-100 border-b-1 border-gray-300">
-            <th className="px-4 py-2 text-[11px] text-start text-gray-700">
+
+      <table className="w-full">
+        <thead className="sticky top-[58px] z-10">
+          <tr className="bg-gray-100 border-gray-300">
+            <th className="px-4 py-2 text-[11px] text-center text-gray-700 border-r-1 border-gray-200">
               ID
             </th>
-            <th className="px-4 py-1 text-[11px] text-start text-gray-700">
+            <th className="px-4 py-1 text-[11px] text-center text-gray-700 border-gray-200 border-l-1">
               NAME
             </th>
-            <th className="px-4 py-1 text-[11px] text-start text-gray-700">
+            <th className="px-4 py-1 text-[11px] text-center text-gray-700 border-gray-200 border-l-1">
               IMAGE
             </th>
-            <th className="px-4 py-1 text-[11px] text-start text-gray-700">
-              PRICE
+            <th className="px-4 py-1 text-[11px] text-center text-gray-700 border-gray-200 border-l-1">
+              DESCRIPTION
             </th>
-            <th className="px-4 py-1 text-[11px] text-start text-gray-700">
-              STOCK
-            </th>
-            <th className="px-4 py-1 text-[11px] text-start text-gray-700">
-              CATEGORY
-            </th>
-            <th className="px-4 py-1 text-[11px] text-start text-gray-700">
+            <th className="px-4 py-1 text-[11px] text-center text-gray-700 border-gray-200 border-l-1">
               STATUS
             </th>
-            <th className="px-4 py-1 text-[11px] text-start text-gray-700">
+            <th className="px-4 py-1 text-[11px] text-center text-gray-700 border-gray-200 border-l-1">
               ACTIONS
             </th>
           </tr>
         </thead>
 
-        <tbody className="">
-          <tr className="border-gray-300">
-            <td className="text-[12px] px-4 py-2">10000</td>
-            <td className="text-[12px] px-4 py-2 max-w-[200px]">
-              32 wooden furniture furniturefurniture refurniture
-            </td>
-            <td className="text-[12px] px-4 py-2">
-              <Image
-                src={"/chair.jpg"}
-                alt="image"
-                width={30}
-                height={40}
-              ></Image>
-            </td>
-            <td className="text-[12px] px-4 py-2">10000</td>
-            <td className="text-[12px] px-4 py-2">10000</td>
+        {loading ? (
+          <tbody>
+            <tr className="text-center">
+              <td colSpan={6} className="py-3">
+                <ClipLoader
+                  color={"#a53ee5"}
+                  loading={true}
+                  cssOverride={override}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </td>
+            </tr>
+          </tbody>
+        ) : categories.length <= 0 ? (
+          <tbody>
+            <tr className="text-center">
+              <td colSpan={6} className="py-3 text-[13px]">
+                -- No data found --
+              </td>
+            </tr>
+          </tbody>
+        ) : (
+          <tbody className="">
+            {categories.map((data) => {
+              return (
+                <tr className="border-gray-100 border-b-1" key={data.id}>
+                  <td className="text-[12px] px-1 py-2 border-gray-100 border-r-1 text-center ">
+                    {data.id}
+                  </td>
+                  <td className="text-[12px] px-1 py-2 border-gray-100 border-r-1 text-center">
+                    {data.name}
+                  </td>
 
-            <td className="text-[12px] px-4">wooden furniture</td>
-            <td className="text-[12px] px-4">ACTIVE</td>
+                  <td className="text-[12px] px-4 py-2 border-gray-100 border-r-1 flex justify-center">
+                    <Image
+                      src={"/chair.jpg"}
+                      alt="image"
+                      width={30}
+                      height={40}
+                    ></Image>
+                  </td>
 
-            <td className="px-3 max-w-[180px]">
-              <div className="flex  justify-between ">
-            
-                <span
-                  className="pr-3 cursor-pointer"
-                  onClick={handleProductEdit}
-                >
-                  <MdEdit size={20} />
-                </span>
-                <span
-                  className="pr-3 cursor-pointer"
-                  onClick={handleProductDelete}
-                >
-                  <MdDelete size={20} />
-                </span>
-                <span
-                  className="pr-3 cursor-pointer"
-                  onClick={handleProductView}
-                >
-                  <IoMdInformationCircle size={20} />
-                </span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+                  <td className="text-[12px] px-1 py-2 border-gray-100 border-r-1 text-center">
+                    {data.discription}
+                  </td>
+
+                  <td className="text-center">
+                    <span
+                      className={`text-[10px] ${
+                        data.active ? "bg-green-600" : "bg-red-600"
+                      }  px-2 py-1 rounded-sm text-white border-gray-100 border-r-1`}
+                    >
+                      {data.active ? "ACTIVE" : "IN ACTIVE"}
+                    </span>
+                  </td>
+
+                  <td className="px-3  border-gray-100 border-l-1">
+                    <div className="flex justify-around ">
+                      <span
+                        className="pr-3 cursor-pointer"
+                        onClick={() => handleProductUpdate(data)}
+                      >
+                        <MdEdit size={20} />
+                      </span>
+                      <span
+                        className="pr-3 cursor-pointer"
+                        onClick={() => handleProductDelete(data.id)}
+                      >
+                        <MdDelete size={20} />
+                      </span>
+                      <span
+                        className="pr-3 cursor-pointer"
+                        onClick={handleProductView}
+                      >
+                        <IoMdInformationCircle size={20} />
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        )}
       </table>
 
-      {isModalOpen && activeModal === "edit" && (
+      {/* {isModalOpen && activeModal === "edit" && (
         <Modal isOpen={isModalOpen} onClose={handleModal}>
-          <ProductEditModal />
+          <CategoryUpdateModal
+           name={name}
+            setName={setName}
+            description={description}
+            setDescription={setDescription}
+            setImage={setImage}
+            setActive={setActive}
+            handleUpdateCategory={handleUpdateCategory}
+            active={active}
+            loading={loading}
+            previewURL={previewURL}
+            setPreviewURL={setPreviewURL}
+            error={error}
+          />
         </Modal>
       )}
       {isModalOpen && activeModal === "view" && (
@@ -149,9 +256,30 @@ export default function ProductsTable() {
       )}
       {isModalOpen && activeModal === "delete" && (
         <Modal isOpen={isModalOpen} onClose={handleModal}>
-          <ProductDeleteModal />
+          <CategoryDeleteModal
+            loading={loading}
+            handleDeleteCategory={handleDeleteCategory}
+          />
         </Modal>
       )}
+      {isModalOpen && activeModal === "add" && (
+        <Modal isOpen={isModalOpen} onClose={handleModal}>
+          <CategoryAddModal
+            name={name}
+            setName={setName}
+            description={description}
+            setDescription={setDescription}
+            setImage={setImage}
+            setActive={setActive}
+            handleCreateCategory={handleCreateCategory}
+            active={active}
+            loading={loading}
+            previewURL={previewURL}
+            setPreviewURL={setPreviewURL}
+            error={error}
+          />
+        </Modal>
+      )} */}
     </div>
   );
 }

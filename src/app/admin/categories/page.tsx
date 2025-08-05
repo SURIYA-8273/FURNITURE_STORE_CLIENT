@@ -1,16 +1,17 @@
 "use client";
-import AdminHeader from "@/components/admin/AdminHeader";
-import BannerTable from "@/components/admin/BannerTable";
 
-const BannerList = () => {
+import CategoriesTable from "@/components/admin/CategoriesTable";
+import AdminHeader from "@/components/admin/AdminHeader";
+
+const CategoryList = () => {
   return (
     <div className="w-full">
-      <AdminHeader name="BANNER" />
+      <AdminHeader name="CATEGORY" />
       <div className="w-full overflow-x-auto flex justify-center items-center px-2 md:px-20 relative">
-        <BannerTable />
+        <CategoriesTable />
       </div>
     </div>
   );
 };
 
-export default BannerList;
+export default CategoryList;
