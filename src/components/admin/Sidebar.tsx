@@ -10,7 +10,7 @@ import { FaFirstOrderAlt } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { MdCategory } from "react-icons/md";
 import { TbCategoryFilled } from "react-icons/tb";
-import { IoClose, IoMenu } from "react-icons/io5";
+import { IoMenu } from "react-icons/io5";
 import { useState } from "react";
 import Image from "next/image";
 

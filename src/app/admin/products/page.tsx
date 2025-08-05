@@ -1,7 +1,6 @@
 "use client";
-import Modal from "@/components/modals/admin/Modal";
 import ProductsTable from "@/components/admin/ProductsTable";
-import React, { useState } from "react";
+import React from "react";
 
 const ProductsList = () => {
   

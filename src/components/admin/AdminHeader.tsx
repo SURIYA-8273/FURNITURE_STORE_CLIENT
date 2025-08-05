@@ -2,7 +2,6 @@ import Image from "next/image";
 import React from "react";
 import { IoSettings } from "react-icons/io5";
 import { MdOutlineLightMode } from "react-icons/md";
-import { TbCategoryFilled } from "react-icons/tb";
 interface AdminHeaderProps {
   name: string;
 }

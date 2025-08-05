@@ -3,8 +3,6 @@ import { MdDelete } from "react-icons/md";
 import { IoMdInformationCircle } from "react-icons/io";
 import Image from "next/image";
 import { useState, CSSProperties, useEffect } from "react";
-import Modal from "../modals/Modal";
-import ProductViewModal from "../modals/admin/ProductViewModal";
 import { CiImport } from "react-icons/ci";
 import { CiExport } from "react-icons/ci";
 import { ClipLoader } from "react-spinners";

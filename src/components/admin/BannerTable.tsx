@@ -42,7 +42,6 @@ export default function BannerTable() {
     name,
     setPreviewURL,
     handleDeleteBanner,
-    handleUpdateBanner,
     error,
     previewURL,
     handleCreateBanner,
@@ -51,13 +50,7 @@ export default function BannerTable() {
     setCategoryId
   } = useBanner();
 
-  useEffect(() => {
-    if (modalState) {
-      setIsModalOpen(false);
-      setActiveModal(null);
-      setModalState(false);
-    }
-  }, [modalState]);
+
 
   useEffect(() => {
     if (modalState) {

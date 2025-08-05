@@ -10,7 +10,6 @@ import { CiExport } from "react-icons/ci";
 import { ClipLoader } from "react-spinners";
 import Modal from "../modals/Modal";
 import CategoryDeleteModal from "../modals/admin/category/CategoryDeleteModal";
-import CategoryAddModal from "../modals/admin/category/CategoryAddModal";
 import CategoryUpdateModal from "../modals/admin/category/CategoryUpdateModal";
 import { useSubCategory } from "@/hooks/useSubCategory";
 import SubCategoryAddModal from "../modals/admin/sub-category/SubCategoryAddModal";

@@ -1,7 +1,6 @@
 import { IoMdMenu } from "react-icons/io";
 import { GrFavorite } from "react-icons/gr";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { ImageConfigContext } from "next/dist/shared/lib/image-config-context.shared-runtime";
 import Image from "next/image";
 export default function Home() {
   return (
