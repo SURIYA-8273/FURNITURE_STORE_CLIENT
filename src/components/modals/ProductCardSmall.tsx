@@ -1,7 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
 import { IoStarSharp } from 'react-icons/io5';
-const ProductCardSmall = ({data}) => {
+
+type ProductCardSmallProps ={
+    data : number
+}
+const ProductCardSmall = ({data}:ProductCardSmallProps) => {
   return (
    <div
                 key={data}

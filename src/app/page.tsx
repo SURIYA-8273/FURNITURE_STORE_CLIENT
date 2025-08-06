@@ -106,8 +106,8 @@ export default function Home() {
        <div className="mt-3">
         <p className="font-semibold text-[17px]">TRENDING PRODUCTS</p>
         <div className="mt-2 flex gap-x-2 overflow-x-auto scrollbar-hide">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((data) => (
-            <Link key={data} href={`/products/${data}` }><ProductCardSmall  data={data} /></Link>
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((data,index) => (
+            <Link key={data} href={`/products/${data}` }><ProductCardSmall  data={index} /></Link>
           ))}
         </div>
       </div>
@@ -115,7 +115,7 @@ export default function Home() {
        <div className="mt-5">
         <p className="font-semibold text-[17px]">POPULAR PRODUCTS</p>
         <div className="mt-2 flex gap-x-2 overflow-x-auto scrollbar-hide">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((data) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((data,index) => (
             <Link key={data} href={`/products/${data}` }><ProductCardSmall  data={data} /></Link>
           ))}
         </div>

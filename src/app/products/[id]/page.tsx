@@ -7,7 +7,6 @@ import { GrFavorite } from "react-icons/gr";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import Image from "next/image";
-import { IoStarSharp } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import ProductCardSmall from "@/components/modals/ProductCardSmall";
