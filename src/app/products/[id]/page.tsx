@@ -1,5 +1,4 @@
 "use client";
-import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
@@ -11,7 +10,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import ProductCardSmall from "@/components/modals/ProductCardSmall";
 const ProductDetail = () => {
-  const { id } = useParams();
+
 
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedColorId, setSelectedColorId] = useState<number>(1);

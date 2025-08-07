@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
-
-
+import BottomNavigation from "@/components/BottomNavigation";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,14 +24,13 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-     
-       <body
-        className={""}
-      >
+
+      <body className={""}>
         {children}
-        <ToastContainer/>
+
+        {/* <BottomNavigation/> */}
+        <ToastContainer />
       </body>
-     
     </html>
   );
 }

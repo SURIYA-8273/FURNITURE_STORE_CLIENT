@@ -4,7 +4,11 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import Image from "next/image";
 import Link from "next/link";
 import ProductCardSmall from "@/components/modals/ProductCardSmall";
+
+
 export default function Home() {
+
+
 
   const categories = [
   {
@@ -41,8 +45,6 @@ export default function Home() {
 ;
   return (
     <div className="mx-2 mt-3 px-1">
-
-
       <div className="flex justify-between mb-2 sticky top-0 bg-white px-1 pt-2 pb-3">
               <div className="flex gap-2">
                 <IoMdMenu size={23} color="gray" />
@@ -50,8 +52,9 @@ export default function Home() {
       
               <div className="flex gap-6">
                 
-                <GrFavorite size={23} color="gray" />
-                <MdOutlineShoppingCart size={23} color="gray" />
+                <Link href={"/user/favourite"}><GrFavorite  size={23} color="gray" /></Link>
+                <Link href={"/user/cart"}> <MdOutlineShoppingCart size={23} color="gray" /></Link>
+               
               </div>
             </div>
             
@@ -75,7 +78,7 @@ export default function Home() {
                 height={100}
                 width={150}
                 alt={`Chair`}
-                className=" w-full h-full rounded-md border border-gray-400"
+                className=" w-full h-full  rounded-full border border-gray-400"
               />
             </div>
             <p className="text-[15px] text-center pt-1  line-clamp-1">
@@ -86,7 +89,7 @@ export default function Home() {
       </div>
 
       <div className="mb-3 mt-4">
-        <div className="h-[160px] w-full flex-shrink-0  rounded-lg">
+        <div className="h-[200px] w-full flex-shrink-0  rounded-lg">
           <Image
             src="/banner1.png"
             height={150}
